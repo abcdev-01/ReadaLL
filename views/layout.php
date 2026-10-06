@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>ReadAll — Members</title>
+    <title>ReaDaLL — Members</title>
     <style>
         body { font-family: system-ui, sans-serif; margin: 2rem; }
         table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
@@ -20,7 +20,7 @@
     </style>
 </head>
 <body>
-    <h1>ReadAll — Members</h1>
+    <h1>ReaDaLL — Members</h1>
     <p>
         <a href="<?= htmlspecialchars($baseUrl, ENT_QUOTES) ?>/index.php?route=members">All members</a> |
         <a href="<?= htmlspecialchars($baseUrl, ENT_QUOTES) ?>/index.php?route=members/create">Add member</a>

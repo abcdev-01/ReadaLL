@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use ReadAll\Controller\MemberController;
-use ReadAll\Database;
-use ReadAll\Repository\MysqlMemberRepository;
+use ReaDaLL\Controller\MemberController;
+use ReaDaLL\Database;
+use ReaDaLL\Repository\MysqlMemberRepository;
 
 $config = require __DIR__ . '/../config.php';
 
 spl_autoload_register(function (string $class): void {
-    $prefix = 'ReadAll\\';
+    $prefix = 'ReaDaLL\\';
     if (!str_starts_with($class, $prefix)) {
         return;
     }

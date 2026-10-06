@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace ReaDaLL\Controller;
 
-use ReadAll\Model\Member;
-use ReadAll\Repository\MemberRepository;
-use ReadAll\Support\Validator;
+use ReaDaLL\Model\Member;
+use ReaDaLL\Repository\MemberRepository;
+use ReaDaLL\Support\Validator;
 
 final class MemberController
 {

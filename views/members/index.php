@@ -1,4 +1,4 @@
-<?php /** @var \ReadAll\Model\Member[] $members */ ?>
+<?php /** @var \ReaDaLL\Model\Member[] $members */ ?>
 
 <?php if (empty($members)): ?>
     <p>No members yet.
