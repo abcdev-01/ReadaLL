@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ReaDaLL\Repository;
 
 use PDO;
-use ReadAll\Model\Member;
+use ReaDaLL\Model\Member;
 
 final class MysqlMemberRepository implements MemberRepository
 {

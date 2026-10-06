@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ReaDaLL\Repository;
 
-use ReadAll\Model\Member;
+use ReaDaLL\Model\Member;
 
 interface MemberRepository
 {
