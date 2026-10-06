@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    // No trailing slash. This is the URL path to your public folder.
+    
     'base_url' => '/projects/ReaDaLL/public',
 
     'db' => [
