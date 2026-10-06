@@ -1,6 +1,6 @@
-<?php /** @var array<string,string> $errors @var array<string,string> $old */ ?>
+<?php /** @var array<string,string> $errors @var array<string,string> $old @var string $baseUrl */ ?>
 
-<form method="post" action="/index.php?route=members/create">
+<form method="post" action="<?= htmlspecialchars($baseUrl, ENT_QUOTES) ?>/index.php?route=members/create">
     <label for="name">Name</label>
     <input id="name" name="name"
            value="<?= htmlspecialchars($old['name'], ENT_QUOTES) ?>">

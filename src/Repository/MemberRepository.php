@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ReadAll\Repository;
+namespace ReaDaLL\Repository;
 
 use ReadAll\Model\Member;
 

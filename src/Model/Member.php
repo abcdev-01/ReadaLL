@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ReadAll\Model;
+namespace ReaDaLL\Model;
 
 final class Member
 {

@@ -1,3 +1,7 @@
+<?php
+/** @var string $view */
+/** @var string $baseUrl */
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,8 +22,8 @@
 <body>
     <h1>ReadAll — Members</h1>
     <p>
-        <a href="/index.php?route=members">All members</a> |
-        <a href="/index.php?route=members/create">Add member</a>
+        <a href="<?= htmlspecialchars($baseUrl, ENT_QUOTES) ?>/index.php?route=members">All members</a> |
+        <a href="<?= htmlspecialchars($baseUrl, ENT_QUOTES) ?>/index.php?route=members/create">Add member</a>
     </p>
     <?php require __DIR__ . '/' . $view . '.php'; ?>
 </body>

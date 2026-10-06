@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ReadAll;
+namespace ReaDaLL;
 
 use PDO;
 use PDOException;

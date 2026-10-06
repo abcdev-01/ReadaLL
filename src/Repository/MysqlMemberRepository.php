@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ReadAll\Repository;
+namespace ReaDaLL\Repository;
 
 use PDO;
 use ReadAll\Model\Member;

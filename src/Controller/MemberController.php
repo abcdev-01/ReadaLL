@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ReadAll\Controller;
+namespace ReaDaLL\Controller;
 
 use ReadAll\Model\Member;
 use ReadAll\Repository\MemberRepository;
@@ -10,7 +10,10 @@ use ReadAll\Support\Validator;
 
 final class MemberController
 {
-    public function __construct(private MemberRepository $members) {}
+    public function __construct(
+        private MemberRepository $members,
+        private string $baseUrl
+    ) {}
 
     public function index(): void
     {
@@ -44,7 +47,7 @@ final class MemberController
                     $old['phone'] ?: null
                 ));
 
-                header('Location: /index.php?route=members');
+                header('Location: ' . $this->baseUrl . '/index.php?route=members');
                 exit;
             }
         }
@@ -54,6 +57,7 @@ final class MemberController
 
     private function render(string $view, array $data = []): void
     {
+        $baseUrl = $this->baseUrl;   // exposed to layout.php
         extract($data, EXTR_SKIP);
         require __DIR__ . '/../../views/layout.php';
     }
