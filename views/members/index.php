@@ -8,7 +8,7 @@
     <table>
         <thead>
             <tr>
-                <th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th>
+                <th>S/N</th><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th>
             </tr>
         </thead>
         <tbody>
