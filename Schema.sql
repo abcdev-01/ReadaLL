@@ -1,6 +1,6 @@
-CREATE DATABASE ReaDaLL CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS ReaDaLL CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE ReaDaLL;
 
@@ -8,8 +8,50 @@ CREATE TABLE members (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(120) NOT NULL,
     email VARCHAR(180) NOT NULL UNIQUE,
-    phone VARCHAR(30) NULL,
+    phone VARCHAR(20) NOT NULL,
     joined_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE = InnoDB;
 
-ALTER TABLE members MODIFY COLUMN phone VARCHAR(100) NOT NULL;
+CREATE TABLE authors (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(180) NOT NULL UNIQUE,
+    phone VARCHAR(20) NOT NULL
+) ENGINE = InnoDB;
+
+CREATE TABLE categories (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE = InnoDB;
+
+CREATE TABLE books (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    isbn VARCHAR(20) NOT NULL UNIQUE,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    category_id INT UNSIGNED,
+    author_id INT UNSIGNED,
+    CONSTRAINT fk_books_category FOREIGN KEY (category_id) REFERENCES categories (id),
+    CONSTRAINT fk_books_author FOREIGN KEY (author_id) REFERENCES authors (id)
+) ENGINE = InnoDB;
+
+CREATE TABLE book_copies (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    book_id INT UNSIGNED NOT NULL,
+    CONSTRAINT fk_copies_book FOREIGN KEY (book_id) REFERENCES books (id)
+) ENGINE = InnoDB;
+
+CREATE TABLE loan_records (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    copy_id INT UNSIGNED NOT NULL,
+    member_id INT UNSIGNED NOT NULL,
+    borrowed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    returned_at DATETIME,
+    status ENUM('returned', 'not returned') NOT NULL DEFAULT 'not returned',
+    CONSTRAINT fk_loan_copy FOREIGN KEY (copy_id) REFERENCES book_copies (id),
+    CONSTRAINT fk_loan_member FOREIGN KEY (member_id) REFERENCES members (id)
+) ENGINE = InnoDB;
+
+ALTER TABLE authors
+ADD COLUMN joined_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
