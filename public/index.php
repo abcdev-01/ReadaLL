@@ -1,7 +1,7 @@
 <?php
 
 spl_autoload_register(function ($class) {
-    $prefix  = 'App\\';
+    $prefix  = 'ReaDall\\';
     $baseDir = __DIR__ . '/../src/';
 
     if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
@@ -16,14 +16,14 @@ spl_autoload_register(function ($class) {
     }
 });
 
-use App\Repositories\LibraryRepository;
-use App\Services\LibraryService;
-use App\UI\ConsoleApp;
+use ReadaLL\Repository\LibraryRepository;
+use ReadaLL\Services\LibraryService;
+use ReadaLL\front\ConsoleReaDaLL;
 
 try {
     $repository = new LibraryRepository();
     $service    = new LibraryService($repository);
-    $app        = new ConsoleApp($service);
+    $app        = new ConsoleReaDaLL($service);
     $app->run();
 } catch (Throwable $e) {
     echo "Fatal error: " . $e->getMessage() . "\n";

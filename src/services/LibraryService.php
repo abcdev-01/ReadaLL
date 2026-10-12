@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace ReaDaLL\Services;
 
-use App\Repositories\LibraryRepository;
+use ReaDaLL\Repository\LibraryRepository;
 use RuntimeException;
 
 class LibraryService
@@ -12,7 +12,7 @@ class LibraryService
     public function registerMember(string $name, string $email, string $phone): int
     {
         if (trim($name) === '') {
-            throw new RuntimeException("Member name is required.");
+            throw new RuntimeException("Member name is reqred.");
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -20,7 +20,7 @@ class LibraryService
         }
 
         if (trim($phone) === '') {
-            throw new RuntimeException("Phone number is required.");
+            throw new RuntimeException("Phone number is reqred.");
         }
 
         if ($this->repo->findMemberByEmail($email)) {
@@ -33,7 +33,7 @@ class LibraryService
     public function addAuthor(string $name, string $email, string $phone): int
     {
         if (trim($name) === '') {
-            throw new RuntimeException("Author name is required.");
+            throw new RuntimeException("Author name is reqred.");
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -41,7 +41,7 @@ class LibraryService
         }
 
         if (trim($phone) === '') {
-            throw new RuntimeException("Author phone is required.");
+            throw new RuntimeException("Author phone is reqred.");
         }
 
         if ($this->repo->authorEmailExists($email)) {
@@ -54,7 +54,7 @@ class LibraryService
     public function addCategory(string $name): int
     {
         if (trim($name) === '') {
-            throw new RuntimeException("Category name is required.");
+            throw new RuntimeException("Category name is reqred.");
         }
 
         if ($this->repo->categoryNameExists($name)) {
@@ -71,7 +71,7 @@ class LibraryService
         array $authorIds
     ): int {
         if (trim($name) === '' || trim($isbn) === '') {
-            throw new RuntimeException("Book name and ISBN are required.");
+            throw new RuntimeException("Book name and ISBN are reqred.");
         }
 
         if ($this->repo->isbnExists($isbn)) {
@@ -83,7 +83,7 @@ class LibraryService
         }
 
         if (empty($authorIds)) {
-            throw new RuntimeException("At least one author is required.");
+            throw new RuntimeException("At least one author is reqred.");
         }
 
         foreach ($authorIds as $authorId) {
@@ -102,7 +102,7 @@ class LibraryService
         }
 
         if (trim($copyCode) === '') {
-            throw new RuntimeException("Copy code is required.");
+            throw new RuntimeException("Copy code is reqred.");
         }
 
         if ($this->repo->copyCodeExists($copyCode)) {

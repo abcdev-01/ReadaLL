@@ -1,11 +1,11 @@
 <?php
 
-namespace App\UI;
+namespace ReaDaLL\front;
 
-use App\Services\LibraryService;
+use ReaDaLL\Services\LibraryService;
 use RuntimeException;
 
-class ConsoleApp
+class ConsoleReaDaLL
 {
     public function __construct(private LibraryService $service) {}
 

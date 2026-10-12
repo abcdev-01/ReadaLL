@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories;
+namespace ReaDaLL\Repository;
 
-use App\Config\Database;
-use App\Models\Member;
+use ReaDaLL\Config\Database;
+use ReaDaLL\Models\Member;
 use PDO;
 use RuntimeException;
 
