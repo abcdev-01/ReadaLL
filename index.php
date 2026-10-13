@@ -1,6 +1,25 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
+spl_autoload_register(function ($class) {
+    $folders = [
+        'Config\\'       => 'config/',
+        'Entities\\'     => 'entities/',
+        'Repositories\\' => 'repositories/',
+        'Services\\'     => 'services/'
+    ];
+
+    foreach ($folders as $namespace => $folder) {
+        if (str_starts_with($class, $namespace)) {
+            $className = substr($class, strlen($namespace));
+            $file = __DIR__ . '/' . $folder . $className . '.php';
+
+            if (file_exists($file)) {
+                require $file;
+                return;
+            }
+        }
+    }
+});
 
 use Services\MemberService;
 use Services\BookService;
@@ -24,8 +43,10 @@ function printTable(array $rows): void
 
     foreach ($rows as $row) {
         printLine();
+
         foreach ($row as $key => $value) {
-            echo ucfirst(str_replace('_', ' ', $key)) . ": " . ($value ?? 'N/A') . PHP_EOL;
+            $label = ucfirst(str_replace('_', ' ', $key));
+            echo $label . ": " . ($value ?? 'N/A') . PHP_EOL;
         }
     }
 
@@ -66,7 +87,8 @@ while (true) {
                 $phone = readInput("Phone: ");
 
                 $id = $memberService->registerMember($name, $email, $phone);
-                echo "Member registered with ID $id." . PHP_EOL;
+
+                echo "Member registered successfully with ID: $id" . PHP_EOL;
                 break;
 
             case '2':
@@ -80,7 +102,9 @@ while (true) {
                 $copies = (int) readInput("Number of copies: ");
 
                 $bookId = $bookService->addBook($title, $isbn, $categoryId, $copies);
-                echo "Book added with ID $bookId and $copies copy/copies." . PHP_EOL;
+
+                echo "Book added successfully with ID: $bookId" . PHP_EOL;
+                echo "Number of copies created: $copies" . PHP_EOL;
                 break;
 
             case '4':
@@ -96,23 +120,28 @@ while (true) {
                 $bookId = (int) readInput("Book ID: ");
 
                 $borrowingId = $borrowingService->borrowBook($memberId, $bookId);
-                echo "Book borrowed successfully. Borrowing ID: $borrowingId" . PHP_EOL;
+
+                echo "Book borrowed successfully." . PHP_EOL;
+                echo "Borrowing ID: $borrowingId" . PHP_EOL;
                 break;
 
             case '7':
                 $borrowingId = (int) readInput("Borrowing ID: ");
 
                 $borrowingService->returnBook($borrowingId);
+
                 echo "Book returned successfully." . PHP_EOL;
                 break;
 
             case '8':
                 $memberId = (int) readInput("Member ID: ");
+
                 printTable($borrowingService->getMemberHistory($memberId));
                 break;
 
             case '9':
                 $memberId = (int) readInput("Member ID: ");
+
                 printTable($borrowingService->getCurrentlyBorrowed($memberId));
                 break;
 
@@ -137,13 +166,13 @@ while (true) {
                 exit;
 
             default:
-                echo "Invalid option. Please try again." . PHP_EOL;
+                echo "Invalid option. Please choose a number from the menu." . PHP_EOL;
         }
-    } catch (\InvalidArgumentException $e) {
+    } catch (InvalidArgumentException $e) {
         echo "Validation error: " . $e->getMessage() . PHP_EOL;
-    } catch (\PDOException $e) {
+    } catch (PDOException $e) {
         echo "Database error: " . $e->getMessage() . PHP_EOL;
-    } catch (\Throwable $e) {
+    } catch (Throwable $e) {
         echo "Unexpected error: " . $e->getMessage() . PHP_EOL;
     }
 }
