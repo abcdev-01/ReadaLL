@@ -13,7 +13,7 @@ class Database
     {
         if (self::$connection === null) {
             $host = 'localhost';
-            $dbname = 'readall';
+            $dbname = 'ReaDaLL';
             $username = 'root'; 
             $password = '';
             
