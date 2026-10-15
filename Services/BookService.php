@@ -4,18 +4,18 @@ namespace Services;
 
 use Entities\Book;
 use Entities\BookCopy;
-use Repositories\BookRepository;
-use Repositories\BookCopyRepository;
+use Repositories\bookRepository;
+use Repositories\bookCopyRepository;
 
-class BookService
+class bookService
 {
-    private BookRepository $bookRepository;
-    private BookCopyRepository $copyRepository;
+    private bookRepository $bookrepository;
+    private bookCopyRepository $copyrepository;
 
     public function __construct()
     {
-        $this->bookRepository = new BookRepository();
-        $this->copyRepository = new BookCopyRepository();
+        $this->bookrepository = new bookRepository();
+        $this->copyrepository    = new bookCopyRepository();
     }
 
     public function addBook(string $title, string $isbn, int $categoryId, int $copies): int
@@ -39,15 +39,19 @@ class BookService
             throw new \InvalidArgumentException("A book must have at least one copy.");
         }
 
-        if ($this->bookRepository->isbnExists($isbn)) {
+        if ($this->bookrepository->isbnExists($isbn)) {
             throw new \InvalidArgumentException("A book with this ISBN already exists.");
         }
 
         $book = new Book($title, $isbn, $categoryId);
-        $bookId = $this->bookRepository->create($book);
+        $bookId = $this->bookrepository->create($book);
 
         for ($i = 1; $i <= $copies; $i++) {
-            $this->copyRepository->create(new BookCopy($bookId, $i));
+            $copyCode = 'BOOK-' . $bookId . '-COPY-' . $i;
+
+            $this->copyrepository->create(
+                new BookCopy($bookId, $copyCode)
+            );
         }
 
         return $bookId;
@@ -55,7 +59,7 @@ class BookService
 
     public function getBook(int $id): array
     {
-        $book = $this->bookRepository->findById($id);
+        $book = $this->bookrepository   ->findById($id);
 
         if (!$book) {
             throw new \InvalidArgumentException("Book not found.");
@@ -66,21 +70,21 @@ class BookService
 
     public function getAvailableBooks(): array
     {
-        return $this->bookRepository->getAvailableBooks();
+        return $this->bookrepository->getAvailableBooks();
     }
 
     public function getAllBooksWithAuthors(): array
     {
-        return $this->bookRepository->getAllWithAuthors();
+        return $this->bookrepository->getAllWithAuthors();
     }
 
     public function getBooksPerCategory(): array
     {
-        return $this->bookRepository->getBooksPerCategory();
+        return $this->bookrepository->getBooksPerCategory();
     }
 
     public function getMostBorrowedBooks(): array
     {
-        return $this->bookRepository->getMostBorrowedBooks(5);
+        return $this->bookrepository->getMostBorrowedBooks(5);
     }
 }

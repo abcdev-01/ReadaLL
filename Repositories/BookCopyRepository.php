@@ -1,55 +1,71 @@
 <?php
-namespace Repositories; 
+
+namespace Repositories;
 
 use Config\Database;
-use Entities\Bookcopy;
+use Entities\BookCopy;
 
-class BookCopyRepository{
-private \PDO $db;
+class bookCopyRepository
+{
+    private \PDO $db;
 
     public function __construct()
     {
         $this->db = Database::getConnection();
     }
 
-    public function create(BookCopy $Copy): int {
+    public function create(BookCopy $copy): int
+    {
         $stmt = $this->db->prepare(
-            "INSERT INTO book_copies (book_id, copy_number, status) 
-            VALUES (:book_id, :copy_number, :status)");  
+            "INSERT INTO book_copies (book_id, copy_code, status)
+             VALUES (:book_id, :copy_code, :status)"
+        );
+
         $stmt->execute([
-            ':book_id' => $Copy->getBookId(),
-            ':copy_number' => $Copy->getCopyNumber(),
-            ':status' => $Copy->getStatus()
+            ':book_id' => $copy->getBookId(),
+            ':copy_code' => $copy->getCopyCode(),
+            ':status' => $copy->getStatus()
         ]);
-     return (int) $this->db->lastInsertId();
+
+        return (int) $this->db->lastInsertId();
     }
 
-    public function findAvailableCopy(int $bookId): ?array {
+    public function findAvailableCopy(int $bookId): ?array
+    {
         $stmt = $this->db->prepare(
-            "SELECT * FROM book_copies
-             WHERE book_id = :book_id AND status = 'AVAILABLE'
-             ORDER BY copy_number
+            "SELECT *
+             FROM book_copies
+             WHERE book_id = :book_id
+               AND status = 'available'
+             ORDER BY id
              LIMIT 1"
         );
+
         $stmt->execute([':book_id' => $bookId]);
         $copy = $stmt->fetch();
 
         return $copy ?: null;
     }
-   public function markBorrowed(int $copyId): void
-   {
-    
+
+    public function markBorrowed(int $copyId): void
+    {
         $stmt = $this->db->prepare(
-            "UPDATE book_copies SET status = 'BORROWED' WHERE id = :id"
+            "UPDATE book_copies
+             SET status = 'borrowed'
+             WHERE id = :id"
         );
+
         $stmt->execute([':id' => $copyId]);
     }
 
     public function markAvailable(int $copyId): void
     {
         $stmt = $this->db->prepare(
-            "UPDATE book_copies SET status = 'AVAILABLE' WHERE id = :id"
+            "UPDATE book_copies
+             SET status = 'available'
+             WHERE id = :id"
         );
+
         $stmt->execute([':id' => $copyId]);
     }
-   }
+}

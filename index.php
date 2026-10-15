@@ -21,13 +21,15 @@ spl_autoload_register(function ($class) {
     }
 });
 
-use Services\MemberService;
-use Services\BookService;
-use Services\BorrowingService;
+use Services\memberService;
+use Services\bookService;
+use Services\borrowingService;
+use Services\authorService;
 
-$memberService = new MemberService();
-$bookService = new BookService();
-$borrowingService = new BorrowingService();
+$memberservice = new memberService();
+$bookservice = new bookService();
+$borrowingservice = new borrowingService();
+$authorservice = new authorService();
 
 function printLine(): void
 {
@@ -64,17 +66,19 @@ while (true) {
     echo "===== LIBRARY MANAGEMENT SYSTEM =====" . PHP_EOL;
     echo "1. Register member" . PHP_EOL;
     echo "2. View members" . PHP_EOL;
-    echo "3. Add book with copies" . PHP_EOL;
-    echo "4. View all books and authors" . PHP_EOL;
-    echo "5. View available books" . PHP_EOL;
-    echo "6. Borrow book" . PHP_EOL;
-    echo "7. Return book" . PHP_EOL;
-    echo "8. View member borrowing history" . PHP_EOL;
-    echo "9. View member's current borrowings" . PHP_EOL;
-    echo "10. View overdue borrowings" . PHP_EOL;
-    echo "11. Books per category" . PHP_EOL;
-    echo "12. Five most borrowed books" . PHP_EOL;
-    echo "13. Full borrowing history" . PHP_EOL;
+    echo "3. Add author" . PHP_EOL;
+    echo "4. View authors" . PHP_EOL;
+    echo "5. Add book with copies" . PHP_EOL;
+    echo "6. View all books and authors" . PHP_EOL;
+    echo "7. View available books" . PHP_EOL;
+    echo "8. Borrow book" . PHP_EOL;
+    echo "9. Return book" . PHP_EOL;
+    echo "10. View member borrowing history" . PHP_EOL;
+    echo "11. View member's current borrowings" . PHP_EOL;
+    echo "12. View overdue borrowings" . PHP_EOL;
+    echo "13. Books per category" . PHP_EOL;
+    echo "14. Five most borrowed books" . PHP_EOL;
+    echo "15. Full borrowing history" . PHP_EOL;
     echo "0. Exit" . PHP_EOL;
 
     $choice = readInput("Choose an option: ");
@@ -86,79 +90,90 @@ while (true) {
                 $email = readInput("Email: ");
                 $phone = readInput("Phone: ");
 
-                $id = $memberService->registerMember($name, $email, $phone);
+                $id = $memberservice->registerMember($name, $email, $phone);
 
                 echo "Member registered successfully with ID: $id" . PHP_EOL;
                 break;
 
             case '2':
-                printTable($memberService->getAllMembers());
+                printTable($memberservice->getAllMembers());
                 break;
 
             case '3':
+                $name = readInput("Author name: ");
+                $email = readInput("Email: ");
+                $phone = readInput("Phone: ");
+
+                $id = $authorservice->addAuthor($name, $email, $phone);
+
+                echo "Author added successfully with ID: $id" . PHP_EOL;
+                break;
+            case '4':
+                printTable($authorservice->getAllAuthors());    
+            case '5':
                 $title = readInput("Book title: ");
                 $isbn = readInput("ISBN: ");
                 $categoryId = (int) readInput("Category ID: ");
                 $copies = (int) readInput("Number of copies: ");
 
-                $bookId = $bookService->addBook($title, $isbn, $categoryId, $copies);
+                $bookId = $bookservice->addBook($title, $isbn, $categoryId, $copies);
 
                 echo "Book added successfully with ID: $bookId" . PHP_EOL;
                 echo "Number of copies created: $copies" . PHP_EOL;
                 break;
 
-            case '4':
-                printTable($bookService->getAllBooksWithAuthors());
-                break;
-
-            case '5':
-                printTable($bookService->getAvailableBooks());
-                break;
-
             case '6':
+                printTable($bookservice->getAllBooksWithAuthors());
+                break;
+
+            case '7':
+                printTable($bookservice->getAvailableBooks());
+                break;
+
+            case '8':
                 $memberId = (int) readInput("Member ID: ");
                 $bookId = (int) readInput("Book ID: ");
 
-                $borrowingId = $borrowingService->borrowBook($memberId, $bookId);
+                $borrowingId = $borrowingservice->borrowBook($memberId, $bookId);
 
                 echo "Book borrowed successfully." . PHP_EOL;
                 echo "Borrowing ID: $borrowingId" . PHP_EOL;
                 break;
 
-            case '7':
+            case '9':
                 $borrowingId = (int) readInput("Borrowing ID: ");
 
-                $borrowingService->returnBook($borrowingId);
+                $borrowingservice->returnBook($borrowingId);
 
                 echo "Book returned successfully." . PHP_EOL;
                 break;
 
-            case '8':
-                $memberId = (int) readInput("Member ID: ");
-
-                printTable($borrowingService->getMemberHistory($memberId));
-                break;
-
-            case '9':
-                $memberId = (int) readInput("Member ID: ");
-
-                printTable($borrowingService->getCurrentlyBorrowed($memberId));
-                break;
-
             case '10':
-                printTable($borrowingService->getOverdueBorrowings());
+                $memberId = (int) readInput("Member ID: ");
+
+                printTable($borrowingservice->getMemberHistory($memberId));
                 break;
 
             case '11':
-                printTable($bookService->getBooksPerCategory());
+                $memberId = (int) readInput("Member ID: ");
+
+                printTable($borrowingservice->getCurrentlyBorrowed($memberId));
                 break;
 
             case '12':
-                printTable($bookService->getMostBorrowedBooks());
+                printTable($borrowingservice->getOverdueBorrowings());
                 break;
 
             case '13':
-                printTable($borrowingService->getFullHistory());
+                printTable($bookservice->getBooksPerCategory());
+                break;
+
+            case '14':
+                printTable($bookservice->getMostBorrowedBooks());
+                break;
+
+            case '15':
+                printTable($borrowingservice->getFullHistory());
                 break;
 
             case '0':

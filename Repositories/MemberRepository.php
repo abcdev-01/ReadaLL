@@ -6,7 +6,7 @@ use Config\Database;
 use Entities\Member;
 use PDOException;
 
-class MemberRepository
+class memberRepository
 {
     private \PDO $db;
 

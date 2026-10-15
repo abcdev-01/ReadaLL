@@ -3,11 +3,11 @@
 namespace Services;
 
 use Entities\Borrowing;
-use Repositories\BorrowingRepository;
-use Repositories\BookCopyRepository;
-use Repositories\MemberRepository;
+use Repositories\borrowingRepository;
+use Repositories\bookCopyRepository;
+use Repositories\memberRepository;
 
-class BorrowingService
+class borrowingService
 {
     private BorrowingRepository $borrowingRepository;
     private BookCopyRepository $copyRepository;
@@ -34,14 +34,14 @@ class BorrowingService
             throw new \InvalidArgumentException("No available copy for this book.");
         }
 
-        $borrowDate = date('Y-m-d');
-        $dueDate = date('Y-m-d', strtotime('+14 days'));
+        $borrowedAt = date('Y-m-d H:i:s');
+        $dueAt = date('Y-m-d H:i:s', strtotime('+14 days'));
 
         $borrowing = new Borrowing(
             $memberId,
             (int) $copy['id'],
-            $borrowDate,
-            $dueDate
+            $borrowedAt,
+            $dueAt
         );
 
         $borrowingId = $this->borrowingRepository->create($borrowing);
@@ -53,25 +53,20 @@ class BorrowingService
 
     public function returnBook(int $borrowingId): void
     {
-        $stmt = \Config\Database::getConnection()->prepare(
-            "SELECT * FROM borrowings WHERE id = :id"
-        );
-
-        $stmt->execute([':id' => $borrowingId]);
-        $borrowing = $stmt->fetch();
+        $borrowing = $this->borrowingRepository->findById($borrowingId);
 
         if (!$borrowing) {
             throw new \InvalidArgumentException("Borrowing record not found.");
         }
 
-        if ($borrowing['status'] !== Borrowing::ACTIVE) {
+        if ($borrowing['status'] !== Borrowing::BORROWED) {
             throw new \InvalidArgumentException("This book has already been returned.");
         }
 
-        $returnDate = date('Y-m-d');
+        $returnedAt = date('Y-m-d H:i:s');
 
-        $this->borrowingRepository->markReturned($borrowingId, $returnDate);
-        $this->copyRepository->markAvailable((int) $borrowing['book_copy_id']);
+        $this->borrowingRepository->markReturned($borrowingId, $returnedAt);
+        $this->copyRepository->markAvailable((int) $borrowing['copy_id']);
     }
 
     public function getMemberHistory(int $memberId): array

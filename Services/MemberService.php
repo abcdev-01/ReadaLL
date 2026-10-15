@@ -3,15 +3,15 @@
 namespace Services;
 
 use Entities\Member;
-use Repositories\MemberRepository;
+use Repositories\memberRepository;
 
-class MemberService
+class memberService
 {
-    private MemberRepository $repository;
+    private memberRepository $repository;
 
     public function __construct()
     {
-        $this->repository = new MemberRepository();
+        $this->repository = new memberRepository();
     }
 
     public function registerMember(string $name, string $email, string $phone): int

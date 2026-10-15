@@ -2,43 +2,70 @@
 
 namespace Entities;
 
-class Borrowing{
-    public const ACTIVE = 'ACTIVE';
-    public const RETURNED = 'RETURNED';
-    public const OVERDUE = 'OVERDUE';
+class Borrowing
+{
+    public const BORROWED = 'borrowed';
+    public const RETURNED = 'returned';
+    public const OVERDUE = 'overdue';
 
     private ?int $id;
-    private  int $memberId;
-    private int $bookCopyId;
-    private String $borrowDate;
-    private string $dueDate;
-    private ?string $returnDate;
+    private int $memberId;
+    private int $copyId;
+    private string $borrowedAt;
+    private string $dueAt;
+    private ?string $returnedAt;
     private string $status;
 
-    public function __function(
+    public function __construct(
         int $memberId,
-        int $bookCopyId ,
-        string $borrowDate,
-        string $dueDate,
-        ?string $returnDate = null,
-        string $status = self::ACTIVE,
+        int $copyId,
+        string $borrowedAt,
+        string $dueAt,
+        ?string $returnedAt = null,
+        string $status = self::BORROWED,
         ?int $id = null
-    ){
-$this->id = $id;
-$this->memberId =  $memberId;
-$this->bookCopyId = $bookCopyId;
-$this->borrowDate = $borrowDate;
-$this->dueDate = $dueDate;
-$this->returnDate = $returnDate;
-$this->status = $status;
+    ) {
+        $this->id = $id;
+        $this->memberId = $memberId;
+        $this->copyId = $copyId;
+        $this->borrowedAt = $borrowedAt;
+        $this->dueAt = $dueAt;
+        $this->returnedAt = $returnedAt;
+        $this->status = $status;
     }
 
-    public function getId(): ?int { return $this->id; }
-    public function getMemberId(): int { return $this->memberId; }
-    public function getBookCopyId(): int { return $this->bookCopyId;}
-    public function getBorrowDate(): string { return $this->borrowDate; }
-    public function getDueDate(): string { return $this->dueDate; }
-    public function getReturnDate(): ?string { return $this->returnDate; }
-    public function getStatus(): string {return $this->status;}
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
+    public function getMemberId(): int
+    {
+        return $this->memberId;
+    }
+
+    public function getCopyId(): int
+    {
+        return $this->copyId;
+    }
+
+    public function getBorrowedAt(): string
+    {
+        return $this->borrowedAt;
+    }
+
+    public function getDueAt(): string
+    {
+        return $this->dueAt;
+    }
+
+    public function getReturnedAt(): ?string
+    {
+        return $this->returnedAt;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
 }

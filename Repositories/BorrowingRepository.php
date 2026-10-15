@@ -5,7 +5,7 @@ namespace Repositories;
 use Config\Database;
 use Entities\Borrowing;
 
-class BorrowingRepository
+class borrowingRepository
 {
     private \PDO $db;
 
@@ -18,60 +18,49 @@ class BorrowingRepository
     {
         $stmt = $this->db->prepare(
             "INSERT INTO borrowings
-             (member_id, book_copy_id, borrow_date, due_date, return_date, status)
+                (member_id, copy_id, borrowed_at, due_at, returned_at, status)
              VALUES
-             (:member_id, :book_copy_id, :borrow_date, :due_date, :return_date, :status)"
+                (:member_id, :copy_id, :borrowed_at, :due_at, :returned_at, :status)"
         );
 
         $stmt->execute([
             ':member_id' => $borrowing->getMemberId(),
-            ':book_copy_id' => $borrowing->getBookCopyId(),
-            ':borrow_date' => $borrowing->getBorrowDate(),
-            ':due_date' => $borrowing->getDueDate(),
-            ':return_date' => $borrowing->getReturnDate(),
+            ':copy_id' => $borrowing->getCopyId(),
+            ':borrowed_at' => $borrowing->getBorrowedAt(),
+            ':due_at' => $borrowing->getDueAt(),
+            ':returned_at' => $borrowing->getReturnedAt(),
             ':status' => $borrowing->getStatus()
         ]);
 
         return (int) $this->db->lastInsertId();
     }
 
-    public function findActiveByCopyId(int $copyId): ?array
+    public function findById(int $id): ?array
     {
         $stmt = $this->db->prepare(
-            "SELECT * FROM borrowings
-             WHERE book_copy_id = :copy_id AND status = 'ACTIVE'
-             LIMIT 1"
+            "SELECT * FROM borrowings WHERE id = :id"
         );
 
-        $stmt->execute([':copy_id' => $copyId]);
+        $stmt->execute([':id' => $id]);
         $borrowing = $stmt->fetch();
 
         return $borrowing ?: null;
     }
 
-    public function markReturned(int $borrowingId, string $returnDate): void
-    {
-        $stmt = $this->db->prepare(
-            "UPDATE borrowings
-             SET return_date = :return_date, status = 'RETURNED'
-             WHERE id = :id"
-        );
-
-        $stmt->execute([
-            ':return_date' => $returnDate,
-            ':id' => $borrowingId
-        ]);
-    }
-
     public function getMemberHistory(int $memberId): array
     {
-        $sql = "SELECT br.id, b.title, bc.copy_number,
-                       br.borrow_date, br.due_date, br.return_date, br.status
+        $sql = "SELECT br.id,
+                       b.title,
+                       bc.copy_code,
+                       br.borrowed_at,
+                       br.due_at,
+                       br.returned_at,
+                       br.status
                 FROM borrowings br
-                JOIN book_copies bc ON bc.id = br.book_copy_id
+                JOIN book_copies bc ON bc.id = br.copy_id
                 JOIN books b ON b.id = bc.book_id
                 WHERE br.member_id = :member_id
-                ORDER BY br.borrow_date DESC";
+                ORDER BY br.borrowed_at DESC";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':member_id' => $memberId]);
@@ -81,12 +70,16 @@ class BorrowingRepository
 
     public function getCurrentlyBorrowedByMember(int $memberId): array
     {
-        $sql = "SELECT b.title, bc.copy_number, br.borrow_date, br.due_date
+        $sql = "SELECT b.title,
+                       bc.copy_code,
+                       br.borrowed_at,
+                       br.due_at
                 FROM borrowings br
-                JOIN book_copies bc ON bc.id = br.book_copy_id
+                JOIN book_copies bc ON bc.id = br.copy_id
                 JOIN books b ON b.id = bc.book_id
-                WHERE br.member_id = :member_id AND br.status = 'ACTIVE'
-                ORDER BY br.borrow_date";
+                WHERE br.member_id = :member_id
+                  AND br.status = 'borrowed'
+                ORDER BY br.borrowed_at";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':member_id' => $memberId]);
@@ -96,29 +89,55 @@ class BorrowingRepository
 
     public function getOverdueBorrowings(): array
     {
-        $sql = "SELECT br.id, m.name AS member, b.title, bc.copy_number,
-                       br.borrow_date, br.due_date,
-                       DATEDIFF(CURRENT_DATE, br.due_date) AS days_overdue
+        $sql = "SELECT br.id,
+                       m.name AS member,
+                       b.title,
+                       bc.copy_code,
+                       br.borrowed_at,
+                       br.due_at,
+                       TIMESTAMPDIFF(DAY, br.due_at, NOW()) AS days_overdue
                 FROM borrowings br
                 JOIN members m ON m.id = br.member_id
-                JOIN book_copies bc ON bc.id = br.book_copy_id
+                JOIN book_copies bc ON bc.id = br.copy_id
                 JOIN books b ON b.id = bc.book_id
-                WHERE br.status = 'ACTIVE' AND br.due_date < CURRENT_DATE
-                ORDER BY br.due_date";
+                WHERE br.status = 'borrowed'
+                  AND br.due_at < NOW()
+                ORDER BY br.due_at";
 
         return $this->db->query($sql)->fetchAll();
     }
 
     public function getFullHistory(): array
     {
-        $sql = "SELECT br.id, m.name AS member, b.title, bc.copy_number,
-                       br.borrow_date, br.due_date, br.return_date, br.status
+        $sql = "SELECT br.id,
+                       m.name AS member,
+                       b.title,
+                       bc.copy_code,
+                       br.borrowed_at,
+                       br.due_at,
+                       br.returned_at,
+                       br.status
                 FROM borrowings br
                 JOIN members m ON m.id = br.member_id
-                JOIN book_copies bc ON bc.id = br.book_copy_id
+                JOIN book_copies bc ON bc.id = br.copy_id
                 JOIN books b ON b.id = bc.book_id
-                ORDER BY br.borrow_date DESC";
+                ORDER BY br.borrowed_at DESC";
 
         return $this->db->query($sql)->fetchAll();
+    }
+
+    public function markReturned(int $borrowingId, string $returnedAt): void
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE borrowings
+             SET returned_at = :returned_at,
+                 status = 'returned'
+             WHERE id = :id"
+        );
+
+        $stmt->execute([
+            ':returned_at' => $returnedAt,
+            ':id' => $borrowingId
+        ]);
     }
 }

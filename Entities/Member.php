@@ -11,11 +11,11 @@ class Member
     private ?string $joinedAt;
 
     public function __construct(
-         ?int $id=null,
         string $name,
         string $email,
         string $phone,
-        ?string $joinedAt = null
+        ?string $joinedAt = null,
+         ?int $id = null,
     ) {
         $this->id = $id;
         $this->name = $name;
