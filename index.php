@@ -86,11 +86,7 @@ while (true) {
     try {
         switch ($choice) {
             case '1':
-                $name = readInput("Member name: ");
-                $email = readInput("Email: ");
-                $phone = readInput("Phone: ");
-
-               echo "Member registered successfully with ID: " .  $memberservice->registerMember($name, $email, $phone) . PHP_EOL;
+               echo "Member registered successfully with ID: " .  $memberservice->registerMember(readInput("Member name: "), readInput("Email: ") ,readInput("Phone: ") ) . PHP_EOL;
                 break;
 
             case '2':
@@ -98,19 +94,22 @@ while (true) {
                 break;
 
             case '3':
-                $name = readInput("Author name: ");
-                $email = readInput("Email: ");
-                $phone = readInput("Phone: ");
-                echo "Author added successfully with ID:" . $authorservice->addAuthor($name, $email, $phone) . PHP_EOL;
+                echo "Author added successfully with ID:" . $authorservice->addAuthor(
+                          readInput("Author name: "),
+                          readInput("Email: "),
+                          readInput("Phone: ")) . PHP_EOL;                      
                 break;
             case '4':
                 printTable($authorservice->getAllAuthors());    
             case '5':
-                $title = readInput("Book title: ");
-                $isbn = readInput("ISBN: ");
-                $categoryId = (int) readInput("Category ID: ");
-                $copies = (int) readInput("Number of copies: ");
-                echo "Book added successfully with ID: ".$bookservice->addBook($title, $isbn, $categoryId, $copies) . PHP_EOL;
+                
+             echo "Book added successfully with ID: ".$bookservice->addBook(
+
+                readInput("Book title: "),
+                readInput("ISBN: "),
+                (int) readInput("Category ID: "),
+                $copies = (int) readInput("Number of copies: ")
+            ) . PHP_EOL;
                 echo "Number of copies created: $copies" . PHP_EOL;
                 break;
 
