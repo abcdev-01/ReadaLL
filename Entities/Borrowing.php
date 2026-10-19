@@ -21,9 +21,10 @@ class Borrowing
         int $copyId,
         string $borrowedAt,
         string $dueAt,
-        ?string $returnedAt = null,
         string $status = self::BORROWED,
-        ?int $id = null
+        ?int $id = null,
+        ?string $returnedAt = null,
+
     ) {
         $this->id = $id;
         $this->memberId = $memberId;
