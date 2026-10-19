@@ -90,9 +90,7 @@ while (true) {
                 $email = readInput("Email: ");
                 $phone = readInput("Phone: ");
 
-                $id = $memberservice->registerMember($name, $email, $phone);
-
-                echo "Member registered successfully with ID: $id" . PHP_EOL;
+               echo "Member registered successfully with ID: " .  $memberservice->registerMember($name, $email, $phone) . PHP_EOL;
                 break;
 
             case '2':
@@ -103,10 +101,7 @@ while (true) {
                 $name = readInput("Author name: ");
                 $email = readInput("Email: ");
                 $phone = readInput("Phone: ");
-
-                $id = $authorservice->addAuthor($name, $email, $phone);
-
-                echo "Author added successfully with ID: $id" . PHP_EOL;
+                echo "Author added successfully with ID:" . $authorservice->addAuthor($name, $email, $phone) . PHP_EOL;
                 break;
             case '4':
                 printTable($authorservice->getAllAuthors());    
@@ -115,10 +110,7 @@ while (true) {
                 $isbn = readInput("ISBN: ");
                 $categoryId = (int) readInput("Category ID: ");
                 $copies = (int) readInput("Number of copies: ");
-
-                $bookId = $bookservice->addBook($title, $isbn, $categoryId, $copies);
-
-                echo "Book added successfully with ID: $bookId" . PHP_EOL;
+                echo "Book added successfully with ID: ".$bookservice->addBook($title, $isbn, $categoryId, $copies) . PHP_EOL;
                 echo "Number of copies created: $copies" . PHP_EOL;
                 break;
 
@@ -131,33 +123,22 @@ while (true) {
                 break;
 
             case '8':
-                $memberId = (int) readInput("Member ID: ");
-                $bookId = (int) readInput("Book ID: ");
-
-                $borrowingId = $borrowingservice->borrowBook($memberId, $bookId);
-
+                echo "Borrowing ID:" . $borrowingservice->borrowBook((int) readInput("Member ID: "), (int) readInput("Book ID: ")) . PHP_EOL;
                 echo "Book borrowed successfully." . PHP_EOL;
-                echo "Borrowing ID: $borrowingId" . PHP_EOL;
                 break;
 
             case '9':
-                $borrowingId = (int) readInput("Borrowing ID: ");
-
-                $borrowingservice->returnBook($borrowingId);
-
+                $borrowingservice->returnBook( (int) readInput("Borrowing ID: "));
                 echo "Book returned successfully." . PHP_EOL;
                 break;
 
             case '10':
-                $memberId = (int) readInput("Member ID: ");
 
-                printTable($borrowingservice->getMemberHistory($memberId));
+                printTable($borrowingservice->getMemberHistory((int) readInput("Member ID: ")));
                 break;
 
             case '11':
-                $memberId = (int) readInput("Member ID: ");
-
-                printTable($borrowingservice->getCurrentlyBorrowed($memberId));
+                printTable($borrowingservice->getCurrentlyBorrowed((int) readInput("Member ID: ")));
                 break;
 
             case '12':

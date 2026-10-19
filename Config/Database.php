@@ -27,6 +27,6 @@ class Database
         die("Database connection failed: " . $e->getMessage() . PHP_EOL);
     }
    
-}return self::$connection;
+     }return self::$connection;
     }
 }

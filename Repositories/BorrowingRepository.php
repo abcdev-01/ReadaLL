@@ -55,7 +55,7 @@ class borrowingRepository
                        br.borrowed_at,
                        br.due_at,
                        br.returned_at,
-                       br.status
+
                 FROM borrowings br
                 JOIN book_copies bc ON bc.id = br.copy_id
                 JOIN books b ON b.id = bc.book_id

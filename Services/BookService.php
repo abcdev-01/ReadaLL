@@ -59,7 +59,7 @@ class bookService
 
     public function getBook(int $id): array
     {
-        $book = $this->bookrepository   ->findById($id);
+        $book = $this->bookrepository->findById($id);
 
         if (!$book) {
             throw new \InvalidArgumentException("Book not found.");
