@@ -1,6 +1,6 @@
 <?php
 
-namespace Entinties;
+namespace Entities;
 
 class Category{
     private ?int $id;

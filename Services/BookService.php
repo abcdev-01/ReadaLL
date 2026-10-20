@@ -3,7 +3,7 @@
 namespace Services;
 
 use Entities\Book;
-use Entities\BookCopy;
+use entities\BookCopy;
 use Repositories\bookRepository;
 use Repositories\bookCopyRepository;
 
@@ -43,8 +43,7 @@ class bookService
             throw new \InvalidArgumentException("A book with this ISBN already exists.");
         }
 
-        $book = new Book($title, $isbn, $categoryId);
-        $bookId = $this->bookrepository->create($book);
+        $bookId = $this->bookrepository->create( new Book($title, $isbn, $categoryId));
 
         for ($i = 1; $i <= $copies; $i++) {
             $copyCode = 'BOOK-' . $bookId . '-COPY-' . $i;

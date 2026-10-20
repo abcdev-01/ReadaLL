@@ -4,7 +4,6 @@ namespace Repositories;
 
 use Config\Database;
 use Entities\Member;
-use PDOException;
 
 class memberRepository
 {

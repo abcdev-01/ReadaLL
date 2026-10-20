@@ -1,5 +1,4 @@
 <?php
-
 namespace Repositories;
 
 use Config\Database;

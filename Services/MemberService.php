@@ -7,11 +7,11 @@ use Repositories\memberRepository;
 
 class memberService
 {
-    private memberRepository $repository;
+    private memberRepository $memberrepository;
 
     public function __construct()
     {
-        $this->repository = new memberRepository();
+        $this->memberrepository = new memberRepository();
     }
 
     public function registerMember(string $name, string $email, string $phone): int
@@ -32,18 +32,18 @@ class memberService
             throw new \InvalidArgumentException("Phone number is required.");
         }
 
-        if ($this->repository->emailExists($email)) {
+        if ($this->memberrepository->emailExists($email)) {
             throw new \InvalidArgumentException("A member with this email already exists.");
         }
 
         $member = new Member($name, $email, $phone);
 
-        return $this->repository->create($member);
+        return $this->memberrepository->create($member);
     }
 
     public function getMember(int $id): array
     {
-        $member = $this->repository->findById($id);
+        $member = $this->memberrepository->findById($id);
 
         if (!$member) {
             throw new \InvalidArgumentException("Member not found.");
@@ -54,6 +54,6 @@ class memberService
 
     public function getAllMembers(): array
     {
-        return $this->repository->getAll();
+        return $this->memberrepository->getAll();
     }
 }
